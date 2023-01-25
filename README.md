@@ -12,6 +12,7 @@ For this assignment, you must create an account with:
 * a daily limit of $1000 and an available balance of $5,000. 
 * The daily limit of $1000 is your upper boundary in this case.
 
+A valid pin format is defined as having 5 digits. And a valid withdrawl is defined as a sufficient amount of money already present within the account that is a factor of 20 or 50
 
 __*bank.FeesCalculator.java*__: The focus here is to **check for the correct calculation of fees while performing withdrawal, deposit, and transfer**.
 * For withdrawal: Use Robust Worst Case Boundary Value Analysis to generate your test cases.
