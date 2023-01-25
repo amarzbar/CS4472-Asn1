@@ -14,6 +14,6 @@ For this assignment, you must create an account with:
 
 
 __*bank.FeesCalculator.java*__: The focus here is to **check for the correct calculation of fees while performing withdrawal, deposit, and transfer**.
-For withdrawal: Use Robust Worst Case Boundary Value Analysis to generate your test cases.
-For deposit: Use Weak Robust Equivalence Class Analysis to generate your test cases.
-For transfer: Use Decision Table Analysis to generate your test cases.
+* For withdrawal: Use Robust Worst Case Boundary Value Analysis to generate your test cases.
+* For deposit: Use Weak Robust Equivalence Class Analysis to generate your test cases.
+* For transfer: Use Decision Table Analysis to generate your test cases.
