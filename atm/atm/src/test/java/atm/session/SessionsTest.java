@@ -1,51 +1,88 @@
 package atm.session;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import atm.dispatcher.MessageDispatcher;
+import atm.exceptions.*;
+import atm.exceptions.InvalidPinFormatException;
+import atm.session.transactions.ATMTransaction;
+import atm.session.transactions.ATMWithdrawal;
 import atm.ui.panels.MainPanel;
+import bank.transactions.utils.TransactionType;
+import atm.dispatcher.MessageDispatcher;
 
-class SessionsTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+
+class SessionTest {
+	@Spy
     Session session;
     MessageDispatcher dispatcher;
 
-    @BeforeEach
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		dispatcher = Mockito.mock(MessageDispatcher.class);
 		
 		MainPanel mainPanel = Mockito.mock(MainPanel.class);
         session = new Session(mainPanel, dispatcher);
 	}
 
-    @AfterEach
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
+	}
+	public static Stream<Arguments> pins(){
+		return Stream.of(
+				// format is the value and the expected output
+				Arguments.of(new char[]{'5','5','5','5'}),
+				Arguments.of(new char[]{'5','5','5','5','5'}),
+				Arguments.of(new char[]{'5','5','5'}),
+				Arguments.of(new char[]{'5','5','5','a'})
+
+		);
+	}
+	
+	public static Stream<Arguments> amounts(){
+		return Stream.of(
+				// format is the value and the expected output
+				Arguments.of(-1),
+				Arguments.of(0),
+				Arguments.of(20),
+				Arguments.of(50),
+				Arguments.of(980),
+				Arguments.of(950),
+				Arguments.of(1001)
+
+
+		);
 	}
 
-    public void checkCorrectPINTest() {
-		Mockito.when(dispatcher.checkCredentials(null, new char[] {'5','5','5','5'})).thenReturn(true);
-		Assertions.assertDoesNotThrow(() -> atm.checkPin(new char[] {'5','5','5','5'}));
+	
+	/* TESTING */
+	@ParameterizedTest
+	@MethodSource("pins")
+	void checkAddPin(char[] pins) {
+		// Valid
+		Assertions.assertThrows(Exception.class, () -> session.addPin(pins));
 	}
+	
+
+	// set alleged amount to 5000
+	@ParameterizedTest
+	@MethodSource("amounts")
+	void checkWithdrawltwo(int amount) {
+
+		session.setTransaction(new ATMWithdrawal());  
+		Assertions.assertThrows(InvalidAmountException.class,  () -> {session.setAmount(amount);}, "Testing addPin() > 5");
+
+
+	}
+	
+	
 }
-
-
-/*
- * Checks ::
- * 
- * PIN FORMAT
- * 
- * 
- * Valid amount chosen for withdrawwal transaction choince 1
- * 
- * RWCBVA (Robus Worst Case Boundary Value Analysis) Single fault assumption principle.
- * 
- * Create account with daily limit 1000 and balance of 5000 == Upper boundary = 1000
- * 
- * 
- * Requirements for class
- * public Session(MainPanel mainPanel, MessageDispatcher dispatcher)
- * main panel and dispatcher
- */
