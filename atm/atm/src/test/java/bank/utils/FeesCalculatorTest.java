@@ -41,7 +41,7 @@ class WithdrawalTest {
 
 	@Test
 	void withdrawalNotStudentMidBalanceTest() {
-		assertEquals(0.001, calculator.calculateWithdrawalFee(200, 2000, false, 1));
+		assertEquals(0.001, calculator.calculateWithdrawalFee(200, 1000, false, 1));
 	}
 
 	@Test
