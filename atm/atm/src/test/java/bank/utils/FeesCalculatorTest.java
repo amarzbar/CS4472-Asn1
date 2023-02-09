@@ -103,3 +103,179 @@ class DepositTest {
 	}
 
 }
+
+class TransferTest {
+	
+	FeesCalculator calculator = new FeesCalculator();
+
+	@BeforeEach
+	void setUp() throws Exception {
+		// Client Type	Amount Transferred	Balance(From)	Balance(To)	Fee
+	}
+
+	@AfterEach
+	void tearDown() throws Exception {
+	}
+		
+	@Test
+	void transferStudentLow1() {
+		// Student	< $200	< $2,000	< $1,000	0.1%
+		double transferAmt = 190;
+		double fromAmt = 1990;
+		double toAmt = 990;
+		double expectedfee = (0.1 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(0, 0, 0, true));
+	}
+	
+	@Test
+	void transferStudentLow2() {
+		// Student	< $200	< $2,000	>= $1,000	0.05%
+		double transferAmt = 190;
+		double fromAmt = 1990;
+		double toAmt = 1010;
+		double expectedfee = (0.05 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, true));
+	}
+	
+	@Test
+	void transferStudentLow3() {
+		// Student	< $200	>= $2,000	< $1,000	0.05%
+		double transferAmt = 190;
+		double fromAmt = 2010;
+		double toAmt = 990;
+		double expectedfee = (0.05 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, true));
+	}
+	
+	@Test
+	void transferStudentLow4() {
+		// Student	< $200	>= $2,000	>= $1,000	0.025%
+		double transferAmt = 190;
+		double fromAmt = 2010;
+		double toAmt = 1010;
+		double expectedfee = (0.025 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, true));
+	}
+	
+	@Test
+	void transferStudentHigh1() {
+		// Student	>= $200	< $2,000	< $1,000	0.05%
+		double transferAmt = 210;
+		double fromAmt = 1990;
+		double toAmt = 990;
+		double expectedfee = (0.05 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, true));
+	}
+	
+	@Test
+	void transferStudentHigh2() {
+		// Student	>= $200	< $2,000	>= $1,000	0.025%
+		double transferAmt = 210;
+		double fromAmt = 1990;
+		double toAmt = 1010;
+		double expectedfee = (0.025 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, true));
+	}
+	
+	@Test
+	void transferStudentHigh3() {
+		// Student	>= $200	>= $2,000	< $1,000	0.25%
+		double transferAmt = 210;
+		double fromAmt = 2010;
+		double toAmt = 990;
+		double expectedfee = (0.25 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, true));
+	}
+	
+	@Test
+	void transferStudentHigh4() {
+		// Student	>= $200	>= $2,000	>= $1,000	0.125%
+		double transferAmt = 210;
+		double fromAmt = 2010;
+		double toAmt = 1010;
+		double expectedfee = (0.125 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, true));
+	}
+	
+	@Test
+	void transferNotStudentLow1() {
+		// Non-student	< $100	< $4,000	< $2,000	0.2%
+		double transferAmt = 90;
+		double fromAmt = 3990;
+		double toAmt = 1990;
+		double expectedfee = (0.2 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, false));
+	}
+	
+	@Test
+	void transferNotStudentLow2() {
+		// Non-student	< $100	< $4,000	>= $2,000	0.1%
+		double transferAmt = 90;
+		double fromAmt = 3990;
+		double toAmt = 2010;
+		double expectedfee = (0.1 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, false));
+	}
+	
+	@Test
+	void transferNotStudentLow3() {
+		// Non-student	< $100	>= $4,000	< $2,000	1%
+		double transferAmt = 90;
+		double fromAmt = 4010;
+		double toAmt = 1990;
+		double expectedfee = (1 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, false));
+	}
+	
+	@Test
+	void transferNotStudentLow4() {
+		// Non-student	< $100	>= $4,000	>= $2,000	0.5%
+		double transferAmt = 90;
+		double fromAmt = 4010;
+		double toAmt = 2010;
+		double expectedfee = (0.5 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, false));
+	}
+	
+	@Test
+	void transferNotStudentHigh1() {
+		// Non-student	>= $100	< $2,000	< $1,000	0.2%
+		double transferAmt = 110;
+		double fromAmt = 1990;
+		double toAmt = 990;
+		double expectedfee = (0.2 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, false));
+	}
+	
+	@Test
+	void transferNotStudentHigh2() {
+		// Non-student	>= $100	< $2,000	>= $1,000	0.1%
+		double transferAmt = 110;
+		double fromAmt = 1990;
+		double toAmt = 1010;
+		double expectedfee = (0.1 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, false));
+	}
+	
+	@Test
+	void transferNotStudentHigh3() {
+		// Non-student	>= $100	>= $2,000	< $1,000	0.5%
+		double transferAmt = 110;
+		double fromAmt = 2010;
+		double toAmt = 990;
+		double expectedfee = (0.5 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, false));
+	}
+	
+	@Test
+	void transferNotStudentHigh4() {
+		// Non-student	>= $100	>= $2,000	>= $1,000	0.25%
+		double transferAmt = 110;
+		double fromAmt = 2010;
+		double toAmt = 1010;
+		double expectedfee = (0.25 * transferAmt)/100;
+		assertEquals(expectedfee, calculator.calculateTransferFee(transferAmt, fromAmt, toAmt, false));
+	}
+
+	
+}
