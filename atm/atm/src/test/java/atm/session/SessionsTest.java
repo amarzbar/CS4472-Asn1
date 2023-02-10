@@ -41,9 +41,12 @@ class SessionTest {
 		return Stream.of(
 				// format is the value and the expected output
 				Arguments.of(new char[]{'5','5','5','5'}),
-				Arguments.of(new char[]{'5','5','5','5','5'}),
+				Arguments.of(new char[]{'5','5','5','5','5','5'}),
 				Arguments.of(new char[]{'5','5','5'}),
-				Arguments.of(new char[]{'5','5','5','a'})
+				Arguments.of(new char[]{'5','5','5','a','5'}),
+				Arguments.of(new char[]{'5',':','5','5','5'}),
+				Arguments.of(new char[]{'5','/','5','5','5'}),
+				Arguments.of(new char[]{'5','5','5','5','5'})
 
 		);
 	}
@@ -55,8 +58,10 @@ class SessionTest {
 				Arguments.of(0),
 				Arguments.of(20),
 				Arguments.of(50),
+				Arguments.of(70),
 				Arguments.of(980),
-				Arguments.of(950),
+				Arguments.of(250),
+				Arguments.of(1000),
 				Arguments.of(1001)
 
 
@@ -67,19 +72,27 @@ class SessionTest {
 	/* TESTING */
 	@ParameterizedTest
 	@MethodSource("pins")
-	void checkAddPin(char[] pins) {
-		// Valid
+	void checkAddPin(char[] pins, int amount) {
+		// Valid 
+		// Note InvalidPINException does not exist!
+		session.setTransaction(new ATMWithdrawal());  
+		session.performTransaction();
+
 		Assertions.assertThrows(Exception.class, () -> session.addPin(pins));
+
 	}
 	
 
 	// set alleged amount to 5000
 	@ParameterizedTest
 	@MethodSource("amounts")
-	void checkWithdrawltwo(int amount) {
+	void checkWithdrawl(int amount) {
 
 		session.setTransaction(new ATMWithdrawal());  
-		Assertions.assertThrows(InvalidAmountException.class,  () -> {session.setAmount(amount);}, "Testing addPin() > 5");
+		session.performTransaction();
+		session.addPin(new char[] {'5','5','5','5','5'});
+		Assertions.assertThrows(InvalidAmountException.class,  () -> {session.setAmount(amount);}, "Testing withdrawal");
+		
 
 
 	}
